@@ -37,6 +37,10 @@ public class BankAccount {
     //if deposit is done from a bank branch , branch flag = 1
     //if deposit is done from an ATM, branch flag = 0
     public double withdraw(double amount, boolean branch){
+        if(amount > 500 & !branch)
+        {
+            throw new IllegalArgumentException();
+        }
         balance -= amount;
         return balance;
     }

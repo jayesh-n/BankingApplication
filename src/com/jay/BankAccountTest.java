@@ -1,33 +1,49 @@
 package com.jay;
 
+import org.junit.jupiter.api.Assertions;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BankAccountTest {
 
+    BankAccount account;
+
+    @org.junit.jupiter.api.BeforeAll
+    public static void startTests(){
+        System.out.println("Starting Tests");
+    }
+
+    @org.junit.jupiter.api.BeforeEach
+    public void setUp(){
+        account= new BankAccount("john", "lennon", 1000, BankAccount.SAVINGS);
+    }
     @org.junit.jupiter.api.Test
     void deposit() throws Exception{
-        BankAccount account= new BankAccount("john", "lennon", 1000, BankAccount.SAVINGS);
         double balance = account.deposit(200, true);
         assertEquals(1200, balance);
     }
 
     @org.junit.jupiter.api.Test
-    void withdraw() throws Exception {
-        BankAccount account= new BankAccount("john", "lennon", 1000, BankAccount.SAVINGS);
-        double balance = account.withdraw(200, true);
-        assertEquals(800, balance);
+    void checkWithdraw_branch() throws Exception {
+        double balance = account.withdraw(600, true);
+        assertEquals(400, balance);
+    }
+
+    @org.junit.jupiter.api.Test
+    void checkWithdraw_atm_limit() throws Exception {
+        Assertions.assertThrows(IllegalArgumentException.class,() ->{
+        double balance = account.withdraw(600, false);
+        assertEquals(400, balance);});
     }
 
     @org.junit.jupiter.api.Test
     void getBalance_deposit() throws Exception {
-        BankAccount account= new BankAccount("john", "lennon", 1000,BankAccount.SAVINGS);
         account.deposit(200, true);
         assertEquals(1200, account.getBalance());
     }
 
     @org.junit.jupiter.api.Test
     void getBalance_withdraw() throws Exception {
-        BankAccount account= new BankAccount("john", "lennon", 1000,BankAccount.SAVINGS);
         account.withdraw(200, true);
         assertEquals(800, account.getBalance());
     }
@@ -40,7 +56,11 @@ class BankAccountTest {
 
     @org.junit.jupiter.api.Test
     void isSavings_true() throws Exception{
-        BankAccount account = new BankAccount("john", "lennon", 1000, BankAccount.SAVINGS);
         assertTrue(account.isSavings());
+    }
+
+    @org.junit.jupiter.api.AfterAll
+    public static void completeTests(){
+        System.out.println("Tests Over");
     }
 }
